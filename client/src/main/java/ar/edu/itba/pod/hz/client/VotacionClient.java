@@ -2,8 +2,11 @@ package ar.edu.itba.pod.hz.client;
 
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
+import ar.edu.itba.pod.hz.model.TipoVivienda;
 import ar.edu.itba.pod.hz.mr.Query1MapperFactory;
 import ar.edu.itba.pod.hz.mr.Query1ReducerFactory;
+import ar.edu.itba.pod.hz.mr.Query2MapperFactory;
+import ar.edu.itba.pod.hz.mr.Query2ReducerFactory;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -15,7 +18,6 @@ import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
 public class VotacionClient {
@@ -70,11 +72,24 @@ public class VotacionClient {
         // Tomar resultado e Imprimirlo
         Map<String, Integer> rta = future.get();
 
-        for (Entry<String, Integer> e : rta.entrySet()) {
+        for (Map.Entry<String, Integer> e : rta.entrySet()) {
             System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
         }
 
-        System.exit(0);
 
+    }
+
+    private void tipoViviendaQuery(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+        ICompletableFuture<Map<TipoVivienda, Integer>> future = job
+                .mapper(new Query2MapperFactory())
+                .reducer(new Query2ReducerFactory())
+                .submit();
+
+        Map<TipoVivienda, Integer> rta = future.get();
+
+        for (Map.Entry<TipoVivienda, Integer> e : rta.entrySet()) {
+            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
+        }
+        System.exit(0);
     }
 }
