@@ -1,2 +1,6 @@
 .DS_Store
 .idea/
+
+api/target/
+client/target/
+server/target/
