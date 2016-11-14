@@ -2,11 +2,9 @@ package ar.edu.itba.pod.hz.client;
 
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
+import ar.edu.itba.pod.hz.model.DepartmentWithIndex;
 import ar.edu.itba.pod.hz.model.TipoVivienda;
-import ar.edu.itba.pod.hz.mr.Query1MapperFactory;
-import ar.edu.itba.pod.hz.mr.Query1ReducerFactory;
-import ar.edu.itba.pod.hz.mr.Query2MapperFactory;
-import ar.edu.itba.pod.hz.mr.Query2ReducerFactory;
+import ar.edu.itba.pod.hz.mr.*;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -17,6 +15,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -64,18 +63,31 @@ public class VotacionClient {
         Job<String, Citizen> job = tracker.newJob(source);
 
         // // Orquestacion de Jobs y lanzamiento
-        ICompletableFuture<Map<String, Integer>> future = job
-                                                                  .mapper(new Query1MapperFactory())
-                                                                  .reducer(new Query1ReducerFactory())
-                                                                  .submit();
+//        ICompletableFuture<Map<String, Integer>> future = job
+//                                                                  .mapper(new Query1MapperFactory())
+//                                                                  .reducer(new Query1ReducerFactory())
+//                                                                  .submit();
+//
+//        // Tomar resultado e Imprimirlo
+//        Map<String, Integer> rta = future.get();
+//
+//        for (Map.Entry<String, Integer> e : rta.entrySet()) {
+//            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
+//        }
+
+        ICompletableFuture<List<DepartmentWithIndex>> future = job
+                                                              .mapper(new Query3MapperFactory())
+                                                              .reducer(new Query3ReducerFactory())
+                                                              .submit(new TopCollator(10));
+//                                                              .submit();
 
         // Tomar resultado e Imprimirlo
-        Map<String, Integer> rta = future.get();
+        List<DepartmentWithIndex> rta = future.get();
 
-        for (Map.Entry<String, Integer> e : rta.entrySet()) {
-            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
+        for (DepartmentWithIndex departmentWithIndex : rta) {
+            System.out.println(String.format("departamento %s => %f",
+                    departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
         }
-
 
     }
 
