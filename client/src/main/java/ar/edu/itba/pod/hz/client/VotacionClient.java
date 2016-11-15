@@ -61,7 +61,6 @@ public class VotacionClient {
         // Ahora el Job desde los pares(key, Value) que precisa MapReduce
         KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(myMap);
         Job<String, Citizen> job = tracker.newJob(source);
-
         // // Orquestacion de Jobs y lanzamiento
 //        ICompletableFuture<Map<String, Integer>> future = job
 //                                                                  .mapper(new Query1MapperFactory())
@@ -91,16 +90,16 @@ public class VotacionClient {
 
     }
 
-    private void tipoViviendaQuery(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
-        ICompletableFuture<Map<TipoVivienda, Integer>> future = job
+    private static void tipoViviendaQuery(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+        ICompletableFuture<Map<TipoVivienda, Double>> future = job
                 .mapper(new Query2MapperFactory())
                 .reducer(new Query2ReducerFactory())
-                .submit();
+                .submit(new AverageCollator());
 
-        Map<TipoVivienda, Integer> rta = future.get();
+        Map<TipoVivienda, Double> rta = future.get();
 
-        for (Map.Entry<TipoVivienda, Integer> e : rta.entrySet()) {
-            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
+        for (Map.Entry<TipoVivienda, Double> e : rta.entrySet()) {
+            System.out.println(String.format("Rango %s => %.2f%%", e.getKey(), e.getValue()));
         }
         System.exit(0);
     }
