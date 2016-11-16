@@ -2,7 +2,6 @@ package ar.edu.itba.pod.hz.client;
 
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
-import ar.edu.itba.pod.hz.model.DepartmentWithPopulation;
 import ar.edu.itba.pod.hz.model.TipoVivienda;
 import ar.edu.itba.pod.hz.mr.*;
 import com.hazelcast.client.HazelcastClient;
@@ -90,15 +89,42 @@ public class VotacionClient {
 //        }
 
         // Query 4
-        ICompletableFuture<List<DepartmentWithPopulation>> future = job
-                                                              .mapper(new Query4MapperFactory("Santa Fe"))
-                                                              .reducer(new Query4ReducerFactory())
-                                                              .submit(new Query4Collator(7));
-        List<DepartmentWithPopulation> rta = future.get();
+//        ICompletableFuture<List<DepartmentWithPopulation>> future = job
+//                                                              .mapper(new Query4MapperFactory("Santa Fe"))
+//                                                              .reducer(new Query4ReducerFactory())
+//                                                              .submit(new Query4Collator(7));
+//        List<DepartmentWithPopulation> rta = future.get();
+//
+//        for (DepartmentWithPopulation departmentWithPopulation : rta) {
+//            System.out.println(String.format("%s = %d", departmentWithPopulation.getDepartment(), departmentWithPopulation.getPopulation()));
+//        }
 
-        for (DepartmentWithPopulation departmentWithPopulation : rta) {
-            System.out.println(String.format("%s = %d", departmentWithPopulation.getDepartment(), departmentWithPopulation.getPopulation()));
+        // Query 5
+
+        ICompletableFuture<Map<String, Long>> future = job
+                                                              .mapper(new Query5MapperFactoryPart1())
+                                                              .reducer(new Query5ReducerFactoryPart1())
+                                                              .submit();
+
+        Map<String, Long> rta = future.get();
+
+        IMap<String, Long> otherMap = client.getMap(String.format("%s:2", MAP_NAME));
+        otherMap.putAll(rta);
+
+        KeyValueSource<String, Long> source2 = KeyValueSource.fromMap(otherMap);
+        Job<String, Long> job2 = tracker.newJob(source2);
+
+        ICompletableFuture<Map<Long, List<String>>> future2 = job2
+                .mapper(new Query5MapperFactoryPart2())
+                .reducer(new Query5ReducerFactoryPart2())
+                .submit();
+
+        Map<Long, List<String>> rta2 = future2.get();
+
+        for (Map.Entry<Long, List<String>> e : rta2.entrySet()) {
+            System.out.println(String.format("%s => %s", e.getKey(), e.getValue()));
         }
+
 
     }
 
