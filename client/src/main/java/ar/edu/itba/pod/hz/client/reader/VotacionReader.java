@@ -33,10 +33,10 @@ public class VotacionReader {
         };
     }
 
-    public static void readVotacion(final IMap<String, Citizen> theIMap) throws Exception {
+    public static void readVotacion(final String fileName, final IMap<String, Citizen> theIMap) throws Exception {
         ICsvBeanReader beanReader = null;
         try {
-            final InputStream is = VotacionReader.class.getClassLoader().getResourceAsStream(FILENAME);
+            final InputStream is = VotacionReader.class.getClassLoader().getResourceAsStream(fileName);
             final Reader aReader = new InputStreamReader(is);
             beanReader = new CsvBeanReader(aReader, CsvPreference.STANDARD_PREFERENCE); // separador
                                                                                                   // ;

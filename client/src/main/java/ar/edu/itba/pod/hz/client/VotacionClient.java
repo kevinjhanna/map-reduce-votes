@@ -49,7 +49,7 @@ public class VotacionClient {
         // del IMap
         IMap<String, Citizen> myMap = client.getMap(MAP_NAME);
         try {
-            VotacionReader.readVotacion(myMap);
+            VotacionReader.readVotacion(System.getProperty("inPath"), myMap);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
