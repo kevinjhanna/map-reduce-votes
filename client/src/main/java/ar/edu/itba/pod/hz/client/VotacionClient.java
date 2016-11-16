@@ -2,7 +2,7 @@ package ar.edu.itba.pod.hz.client;
 
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
-import ar.edu.itba.pod.hz.model.DepartmentWithIndex;
+import ar.edu.itba.pod.hz.model.DepartmentWithPopulation;
 import ar.edu.itba.pod.hz.model.TipoVivienda;
 import ar.edu.itba.pod.hz.mr.*;
 import com.hazelcast.client.HazelcastClient;
@@ -74,17 +74,30 @@ public class VotacionClient {
 //            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
 //        }
 
-        ICompletableFuture<List<DepartmentWithIndex>> future = job
-                                                              .mapper(new Query3MapperFactory())
-                                                              .reducer(new Query3ReducerFactory())
-                                                              .submit(new TopCollator(10));
+        // Query 3
 
-        // Tomar resultado e Imprimirlo
-        List<DepartmentWithIndex> rta = future.get();
+//        ICompletableFuture<List<DepartmentWithIndex>> future = job
+//                                                              .mapper(new Query3MapperFactory())
+//                                                              .reducer(new Query3ReducerFactory())
+//                                                              .submit(new TopCollator(10));
+//
+//        // Tomar resultado e Imprimirlo
+//        List<DepartmentWithIndex> rta = future.get();
+//
+//        for (DepartmentWithIndex departmentWithIndex : rta) {
+//            System.out.println(String.format("%s = %.2f",
+//            departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
+//        }
 
-        for (DepartmentWithIndex departmentWithIndex : rta) {
-            System.out.println(String.format("%s = %.2f",
-            departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
+        // Query 4
+        ICompletableFuture<List<DepartmentWithPopulation>> future = job
+                                                              .mapper(new Query4MapperFactory("Santa Fe"))
+                                                              .reducer(new Query4ReducerFactory())
+                                                              .submit(new Query4Collator(7));
+        List<DepartmentWithPopulation> rta = future.get();
+
+        for (DepartmentWithPopulation departmentWithPopulation : rta) {
+            System.out.println(String.format("%s = %d", departmentWithPopulation.getDepartment(), departmentWithPopulation.getPopulation()));
         }
 
     }

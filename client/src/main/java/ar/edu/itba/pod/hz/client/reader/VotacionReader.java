@@ -3,6 +3,7 @@ package ar.edu.itba.pod.hz.client.reader;
 import ar.edu.itba.pod.hz.model.Citizen;
 import com.hazelcast.core.IMap;
 import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
@@ -26,8 +27,8 @@ public class VotacionReader {
             new ParseInt(new NotNull()), // edad
             new ParseInt(new NotNull()), // alfabetismo
             null,
-            new NotNull(), // nombreDepto
-            new NotNull(), // nombreProv
+            new Trim(new NotNull()), // nombreDepto
+            new Trim(new NotNull()), // nombreProv
             new ParseInt(new NotNull()) // hogarId
         };
     }
