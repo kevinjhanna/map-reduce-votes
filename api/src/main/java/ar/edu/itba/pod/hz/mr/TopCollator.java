@@ -14,18 +14,25 @@ public class TopCollator implements Collator<Map.Entry<String, Double>, List<Dep
 
     @Override
     public List<DepartmentWithIndex> collate(Iterable <Map.Entry<String, Double>> iterator) {
-
-        SortedSet<DepartmentWithIndex> set = new TreeSet<DepartmentWithIndex>();
+        Set set = new HashSet();
+        DepartmentWithIndex min = null;
 
         for (Map.Entry<String, Double> entry : iterator) {
+            DepartmentWithIndex department = new DepartmentWithIndex(entry.getKey(), entry.getValue());
+
             if (set.size() < n) {
-                set.add(new DepartmentWithIndex(entry.getKey(), entry.getValue()));
-            } else if (set.first().getIndex().compareTo(entry.getValue()) == -1) {
-                set.remove(set.first());
-                set.add(new DepartmentWithIndex(entry.getKey(), entry.getValue()));
+                set.add(department);
+                if (min == null || department.compareTo(min) == -1) {
+                    min = department;
+                }
+            } else if (department.compareTo(min) == - 1) {
+                set.remove(min);
+                set.add(department);
             }
         }
 
-        return new LinkedList(set);
+        List<DepartmentWithIndex> list = new LinkedList(set);
+        Collections.sort(list, Collections.reverseOrder());
+        return list;
     }
 }

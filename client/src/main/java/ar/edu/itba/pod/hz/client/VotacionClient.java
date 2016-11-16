@@ -78,14 +78,13 @@ public class VotacionClient {
                                                               .mapper(new Query3MapperFactory())
                                                               .reducer(new Query3ReducerFactory())
                                                               .submit(new TopCollator(10));
-//                                                              .submit();
 
         // Tomar resultado e Imprimirlo
         List<DepartmentWithIndex> rta = future.get();
 
         for (DepartmentWithIndex departmentWithIndex : rta) {
-            System.out.println(String.format("departamento %s => %f",
-                    departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
+            System.out.println(String.format("%s = %.2f",
+            departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
         }
 
     }

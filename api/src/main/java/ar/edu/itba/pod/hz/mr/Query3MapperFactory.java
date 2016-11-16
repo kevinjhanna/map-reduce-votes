@@ -17,6 +17,6 @@ public class Query3MapperFactory implements Mapper<String, Citizen, String, Bool
 
         context.emit(key, valueinput.isAlfabetismo());
 
-//        System.out.println(String.format("Se emite (%s, %s)", key, 1));
+        System.out.println(String.format("Se emite (%s, %s)", key, valueinput.isAlfabetismo()));
     }
 }
