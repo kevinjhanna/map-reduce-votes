@@ -5,7 +5,7 @@ package ar.edu.itba.pod.hz.model;
  */
 public enum TipoVivienda {
 
-  Desconocida(0), Casa(1), Rancho(2), Casilla(3), Departamento(4), PiezaEnInquilinato(5), PiezaEnHotel(6), Calle(7);
+  Desconocida(0), Casa(1), Rancho(2), Casilla(3), Departamento(4), PiezaEnInquilinato(5), PiezaEnHotel(6), LocalNoHabitable(7), Calle(8);
 
   private int code;
 
@@ -26,9 +26,9 @@ public enum TipoVivienda {
       case 4: return Departamento;
       case 5: return PiezaEnInquilinato;
       case 6: return PiezaEnHotel;
-      case 7: return Calle;
-      default: return null;
+      case 7: return LocalNoHabitable;
+      case 8: return Calle;
+      default: return Desconocida;
     }
   }
-
 }
