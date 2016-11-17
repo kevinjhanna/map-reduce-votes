@@ -1,21 +1,17 @@
 package ar.edu.itba.pod.hz.client;
 
+import ar.edu.itba.pod.hz.DistributedMapProvider;
+import ar.edu.itba.pod.hz.JobProvider;
+import ar.edu.itba.pod.hz.client.Query.Query2;
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
-import ar.edu.itba.pod.hz.model.NumberOfCitizensPerHomeType;
 import ar.edu.itba.pod.hz.model.TipoVivienda;
-import ar.edu.itba.pod.hz.mr.*;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
-import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.mapreduce.KeyValueSource;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -58,12 +54,12 @@ public class VotacionClient {
         }
 
         // Ahora el JobTracker y los Workers!
-        JobTracker tracker = client.getJobTracker("default");
+//        JobTracker tracker = client.getJobTracker("default");
 
         // Ahora el Job desde los pares(key, Value) que precisa MapReduce
-        KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(myMap);
-        Job<String, Citizen> job = tracker.newJob(source);
-//        tipoViviendaQuery(client);
+//        KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(myMap);
+//        Job<String, Citizen> job = tracker.newJob(source);
+        tipoViviendaQuery(new JobProvider(client), new DistributedMapProvider(client));
         // // Orquestacion de Jobs y lanzamiento
 //        ICompletableFuture<Map<String, Integer>> future = job
 //                                                                  .mapper(new Query1MapperFactory())
@@ -106,68 +102,37 @@ public class VotacionClient {
         // Query 5
 
 
-      ICompletableFuture<Map<String, Long>> future = job
-                                                              .mapper(new Query5MapperFactoryPart1())
-                                                              .reducer(new Query5ReducerFactoryPart1())
-                                                              .submit();
-
-        Map<String, Long> rta = future.get();
-
-        IMap<String, Long> otherMap = client.getMap(String.format("%s:2", MAP_NAME));
-        otherMap.putAll(rta);
-
-        KeyValueSource<String, Long> source2 = KeyValueSource.fromMap(otherMap);
-        Job<String, Long> job2 = tracker.newJob(source2);
-
-        ICompletableFuture<Map<Long, List<String>>> future2 = job2
-                .mapper(new Query5MapperFactoryPart2())
-                .reducer(new Query5ReducerFactoryPart2())
-                .submit();
-
-        Map<Long, List<String>> rta2 = future2.get();
-
-        for (Map.Entry<Long, List<String>> e : rta2.entrySet()) {
-            System.out.println(String.format("%s => %s", e.getKey(), e.getValue()));
-        }
+//      ICompletableFuture<Map<String, Long>> future = job
+//                                                              .mapper(new Query5MapperFactoryPart1())
+//                                                              .reducer(new Query5ReducerFactoryPart1())
+//                                                              .submit();
+//
+//        Map<String, Long> rta = future.get();
+//
+//        IMap<String, Long> otherMap = client.getMap(String.format("%s:2", MAP_NAME));
+//        otherMap.putAll(rta);
+//
+//        KeyValueSource<String, Long> source2 = KeyValueSource.fromMap(otherMap);
+//        Job<String, Long> job2 = tracker.newJob(source2);
+//
+//        ICompletableFuture<Map<Long, List<String>>> future2 = job2
+//                .mapper(new Query5MapperFactoryPart2())
+//                .reducer(new Query5ReducerFactoryPart2())
+//                .submit();
+//
+//        Map<Long, List<String>> rta2 = future2.get();
+//
+//        for (Map.Entry<Long, List<String>> e : rta2.entrySet()) {
+//            System.out.println(String.format("%s => %s", e.getKey(), e.getValue()));
+//        }
 
 
     }
 
-    private static void tipoViviendaQuery(HazelcastInstance client) throws ExecutionException, InterruptedException {
-        IMap<String, Citizen> myMap = client.getMap(MAP_NAME);
-        try {
-            VotacionReader.readVotacion(System.getProperty("inPath"), myMap);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private static void tipoViviendaQuery(JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException {
+        Map<TipoVivienda, Double> map = new Query2().execute(jobProvider, mapProvider);
 
-        JobTracker tracker = client.getJobTracker("default");
-        KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(myMap);
-        Job<String, Citizen> job = tracker.newJob(source);
-        // Hogar -> (#habitantes, TipoVivienda)
-        ICompletableFuture<Map<Integer, NumberOfCitizensPerHomeType>> future = job
-                .mapper(new Query2HomesPerHomeTypeMapperFactory())
-                .reducer(new Query2HomesPerHomeTypeReducerFactory())
-                .submit();
-
-        Map<Integer, NumberOfCitizensPerHomeType> map = future.get();
-        IMap<Integer, NumberOfCitizensPerHomeType> other = client.getMap(MAP_QUERY2);
-
-        other.putAll(map);
-        KeyValueSource<Integer, NumberOfCitizensPerHomeType> keyValueSource = KeyValueSource.fromMap(other);
-
-        JobTracker newTracker = client.getJobTracker("other");
-        Job<Integer, NumberOfCitizensPerHomeType> newJob = newTracker.newJob(keyValueSource);
-
-        ICompletableFuture<Map<TipoVivienda, Double>> future2 = newJob
-                    .mapper(new Query2PeoplePerHomeTypeMapperFactory())
-                    .reducer(new Query2PeoplePerHomeTypeReducerFactory())
-                    .submit();
-
-        Map<TipoVivienda, Double> answer = future2.get();
-
-
-        for (Map.Entry<TipoVivienda, Double> e : answer.entrySet()) {
+        for (Map.Entry<TipoVivienda, Double> e : map.entrySet()) {
             System.out.println("Tipo vivienda: " + e.getKey() + " average: " + e.getValue());
         }
     }
