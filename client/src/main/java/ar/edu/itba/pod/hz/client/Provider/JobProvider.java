@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.hz;
+package ar.edu.itba.pod.hz.client.Provider;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;

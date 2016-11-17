@@ -1,7 +1,7 @@
 package ar.edu.itba.pod.hz.client.Query;
 
-import ar.edu.itba.pod.hz.DistributedMapProvider;
-import ar.edu.itba.pod.hz.JobProvider;
+import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
+import ar.edu.itba.pod.hz.client.Provider.JobProvider;
 import ar.edu.itba.pod.hz.client.Query.Subquery.AveragePerHomeTypeQuery;
 import ar.edu.itba.pod.hz.client.Query.Subquery.CitizensPerHomeQuery;
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;

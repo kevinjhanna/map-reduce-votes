@@ -1,7 +1,7 @@
 package ar.edu.itba.pod.hz.client;
 
-import ar.edu.itba.pod.hz.DistributedMapProvider;
-import ar.edu.itba.pod.hz.JobProvider;
+import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
+import ar.edu.itba.pod.hz.client.Provider.JobProvider;
 import ar.edu.itba.pod.hz.client.Query.Query2;
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
