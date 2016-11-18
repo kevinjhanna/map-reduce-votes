@@ -2,14 +2,15 @@ package ar.edu.itba.pod.hz.client.Query;
 
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
 import ar.edu.itba.pod.hz.client.Provider.JobProvider;
+import com.hazelcast.mapreduce.Job;
 
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by FranDepascuali on 11/17/16.
  */
-public interface QueryType {
+public interface ComplexQueryType<KeyIn, ValueIn, ValueOut> {
 
-  <ValueOut> ValueOut execute(JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException;
+  ValueOut execute(Job<KeyIn, ValueIn> job, JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException;
 
 }

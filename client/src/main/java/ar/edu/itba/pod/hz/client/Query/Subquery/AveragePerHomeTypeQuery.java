@@ -1,6 +1,6 @@
 package ar.edu.itba.pod.hz.client.Query.Subquery;
 
-import ar.edu.itba.pod.hz.client.Query.MapQuery;
+import ar.edu.itba.pod.hz.client.Query.SimpleQueryType;
 import ar.edu.itba.pod.hz.model.NumberOfCitizensPerHomeType;
 import ar.edu.itba.pod.hz.model.TipoVivienda;
 import ar.edu.itba.pod.hz.mr.Query2PeoplePerHomeTypeMapperFactory;
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by FranDepascuali on 11/17/16.
  */
-public class AveragePerHomeTypeQuery implements MapQuery<Integer, NumberOfCitizensPerHomeType, TipoVivienda, Double> {
+public class AveragePerHomeTypeQuery implements SimpleQueryType<Integer, NumberOfCitizensPerHomeType, Map<TipoVivienda, Double>> {
 
   @Override
   public Map<TipoVivienda, Double> execute(Job<Integer, NumberOfCitizensPerHomeType> job) throws ExecutionException, InterruptedException {
@@ -25,4 +25,5 @@ public class AveragePerHomeTypeQuery implements MapQuery<Integer, NumberOfCitize
 
     return future.get();
   }
+
 }

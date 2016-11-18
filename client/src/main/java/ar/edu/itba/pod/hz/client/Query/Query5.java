@@ -2,7 +2,6 @@ package ar.edu.itba.pod.hz.client.Query;
 
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
 import ar.edu.itba.pod.hz.client.Provider.JobProvider;
-import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
 import ar.edu.itba.pod.hz.mr.Query5MapperFactoryPart1;
 import ar.edu.itba.pod.hz.mr.Query5MapperFactoryPart2;
@@ -19,13 +18,10 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by FranDepascuali on 11/17/16.
  */
-public class Query5 implements QueryType {
+public class Query5 implements ComplexQueryType<String, Citizen, Map<Long, List<String>>> {
 
   @Override
-  public Map<Long, List<String>> execute(JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException {
-    IMap<String, Citizen> map = mapProvider.getMap();
-    loadData(map);
-    Job<String, Citizen> job = jobProvider.newJob(map);
+  public Map<Long, List<String>> execute(Job<String, Citizen> job, JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException {
 
     ICompletableFuture<Map<String, Long>> future = job
             .mapper(new Query5MapperFactoryPart1())
@@ -44,14 +40,6 @@ public class Query5 implements QueryType {
             .submit();
 
     return future2.get();
-  }
-
-  private static void loadData(final IMap<String, Citizen> iMap) {
-    try {
-      VotacionReader.readVotacion(System.getProperty("inPath"), iMap);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
 }
