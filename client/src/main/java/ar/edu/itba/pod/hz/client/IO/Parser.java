@@ -63,6 +63,7 @@ public class Parser {
       }
     } catch (UnknownHostException e) {
       System.out.println("Incorrect ip format: " + key + " it should be " + correct);
+      exit(1);
     }
   }
 
