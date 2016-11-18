@@ -2,17 +2,14 @@ package ar.edu.itba.pod.hz.client;
 
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
 import ar.edu.itba.pod.hz.client.Provider.JobProvider;
-import ar.edu.itba.pod.hz.client.Query.Query2;
 import ar.edu.itba.pod.hz.client.reader.VotacionReader;
 import ar.edu.itba.pod.hz.model.Citizen;
-import ar.edu.itba.pod.hz.model.TipoVivienda;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class VotacionClient {
@@ -53,87 +50,22 @@ public class VotacionClient {
             throw new RuntimeException(e);
         }
 
-        // Ahora el JobTracker y los Workers!
-//        JobTracker tracker = client.getJobTracker("default");
-
-        // Ahora el Job desde los pares(key, Value) que precisa MapReduce
-//        KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(myMap);
-//        Job<String, Citizen> job = tracker.newJob(source);
-        tipoViviendaQuery(new JobProvider(client), new DistributedMapProvider(client));
-        // // Orquestacion de Jobs y lanzamiento
-//        ICompletableFuture<Map<String, Integer>> future = job
-//                                                                  .mapper(new Query1MapperFactory())
-//                                                                  .reducer(new Query1ReducerFactory())
-//                                                                  .submit();
-//
-//        // Tomar resultado e Imprimirlo
-//        Map<String, Integer> rta = future.get();
-//
-//        for (Map.Entry<String, Integer> e : rta.entrySet()) {
-//            System.out.println(String.format("Rango %s => %s", e.getKey(), e.getValue()));
-//        }
-
-      // Query 3
-
-//        ICompletableFuture<List<DepartmentWithIndex>> future = job
-//                                                              .mapper(new Query3MapperFactory())
-//                                                              .reducer(new Query3ReducerFactory())
-//                                                              .submit(new TopCollator(10));
-//
-//        // Tomar resultado e Imprimirlo
-//        List<DepartmentWithIndex> rta = future.get();
-//
-//        for (DepartmentWithIndex departmentWithIndex : rta) {
-//            System.out.println(String.format("%s = %.2f",
-//            departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
-//        }
+        JobProvider jobProvider = new JobProvider(client);
+        DistributedMapProvider mapProvider = new DistributedMapProvider(client);
 
         // Query 4
-//        ICompletableFuture<List<DepartmentWithPopulation>> future = job
-//                                                              .mapper(new Query4MapperFactory("Santa Fe"))
-//                                                              .reducer(new Query4ReducerFactory())
-//                                                              .submit(new Query4Collator(7));
-//        List<DepartmentWithPopulation> rta = future.get();
+//        List<DepartmentWithPopulation> answer = new Query4().execute(jobProvider, mapProvider);
 //
-//        for (DepartmentWithPopulation departmentWithPopulation : rta) {
+//        for (DepartmentWithPopulation departmentWithPopulation : answer) {
 //            System.out.println(String.format("%s = %d", departmentWithPopulation.getDepartment(), departmentWithPopulation.getPopulation()));
 //        }
 
         // Query 5
-
-
-//      ICompletableFuture<Map<String, Long>> future = job
-//                                                              .mapper(new Query5MapperFactoryPart1())
-//                                                              .reducer(new Query5ReducerFactoryPart1())
-//                                                              .submit();
+//        Map<Long, List<String>> answer = new Query5().execute(jobProvider, mapProvider);
 //
-//        Map<String, Long> rta = future.get();
-//
-//        IMap<String, Long> otherMap = client.getMap(String.format("%s:2", MAP_NAME));
-//        otherMap.putAll(rta);
-//
-//        KeyValueSource<String, Long> source2 = KeyValueSource.fromMap(otherMap);
-//        Job<String, Long> job2 = tracker.newJob(source2);
-//
-//        ICompletableFuture<Map<Long, List<String>>> future2 = job2
-//                .mapper(new Query5MapperFactoryPart2())
-//                .reducer(new Query5ReducerFactoryPart2())
-//                .submit();
-//
-//        Map<Long, List<String>> rta2 = future2.get();
-//
-//        for (Map.Entry<Long, List<String>> e : rta2.entrySet()) {
+//        for (Map.Entry<Long, List<String>> e : answer.entrySet()) {
 //            System.out.println(String.format("%s => %s", e.getKey(), e.getValue()));
 //        }
 
-
-    }
-
-    private static void tipoViviendaQuery(JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException {
-        Map<TipoVivienda, Double> map = new Query2().execute(jobProvider, mapProvider);
-
-        for (Map.Entry<TipoVivienda, Double> e : map.entrySet()) {
-            System.out.println("Tipo vivienda: " + e.getKey() + " average: " + e.getValue());
-        }
     }
 }
