@@ -10,6 +10,7 @@ import ar.edu.itba.pod.hz.model.TipoVivienda;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -72,9 +73,14 @@ public class QueryExecutor {
   private void executeQuery2(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     Map<TipoVivienda, Double> answer = new Query2().execute(job, _jobProvider, _mapProvider);
 
-    for (Map.Entry<TipoVivienda, Double> e : answer.entrySet()) {
-      System.out.println(String.format("%s => %f", e.getKey(), e.getValue()));
-    }
+    List<Map.Entry<TipoVivienda, Double>> list = new LinkedList(answer.entrySet());
+
+    list
+        .stream()
+        .sorted((e1, e2) -> Integer.compare(e1.getKey().getCode(), e2.getKey().getCode()))
+        .forEach (e -> {
+          System.out.println(String.format("%s = %.2f", e.getKey().getCode(), e.getValue()));
+        });
   }
 
   private void executeQuery3(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
