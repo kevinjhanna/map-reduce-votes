@@ -11,6 +11,7 @@ import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -41,7 +42,7 @@ public class VotacionClient {
         ccfg.getGroupConfig().setName(configuration.getName()).setPassword(configuration.getPass());
 
         ClientNetworkConfig net = new ClientNetworkConfig();
-        List<String> addresses = configuration.getAllAddresses();
+        List<String> addresses = Arrays.asList(configuration.addresses());
 
         net.addAddress(addresses.toArray(new String[addresses.size()]));
         ccfg.setNetworkConfig(net);

@@ -26,13 +26,13 @@ public class Parser {
     validateNotNull("pass", pass);
     validateNotNull("addresses", addresses);
 
-    if (arrayAddresses.length != 2) {
-      System.out.println("Error!: Addresses format: xx.xx.xx.xx:yy.yy.yy.yy");
+    if (arrayAddresses.length < 1) {
+      System.out.println("Error!: Set at least one address. Addresses format: xx.xx.xx.xx:yy.yy.yy.yy");
       exit(1);
     }
 
-    checkIpAddress("from", arrayAddresses[1], "xx.xx.xx.xx");
-    checkIpAddress("to", arrayAddresses[1], "yy.yy.yy.yy");
+//    checkIpAddress("from", arrayAddresses[1], "xx.xx.xx.xx");
+//    checkIpAddress("to", arrayAddresses[1], "yy.yy.yy.yy");
 
     validateNotNull("query", query);
     Integer queryID = Integer.valueOf(query);
@@ -45,7 +45,7 @@ public class Parser {
     validateNotNull("inPath", inputPath);
     validateNotNull("outPath", outputPath);
 
-    return new Configuration(name, pass, arrayAddresses[0],arrayAddresses[1], queryID, inputPath, outputPath);
+    return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath);
   }
 
   private void validateNotNull(String key, String value) {
