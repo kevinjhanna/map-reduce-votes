@@ -64,9 +64,9 @@ public class QueryExecutor {
   private void executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     Map<String, Integer> answer = new Query1().execute(job);
 
-    for (Map.Entry<String, Integer> e : answer.entrySet()) {
-      System.out.println(String.format("%s => %d", e.getKey(), e.getValue()));
-    }
+    System.out.println(String.format("%s = %d", "0-14", answer.get("0-14")));
+    System.out.println(String.format("%s = %d", "15-64", answer.get("15-64")));
+    System.out.println(String.format("%s = %d", "65-?", answer.get("65-?")));
   }
 
   private void executeQuery2(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
