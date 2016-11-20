@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.hz.client.Query;
 
+import ar.edu.itba.pod.hz.client.IO.FileWriter;
 import ar.edu.itba.pod.hz.client.IO.reader.DataReader;
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
 import ar.edu.itba.pod.hz.client.Provider.JobProvider;
@@ -7,12 +8,13 @@ import ar.edu.itba.pod.hz.model.*;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static java.lang.System.exit;
 
@@ -21,48 +23,47 @@ public class QueryExecutor {
   private JobProvider _jobProvider;
   private DistributedMapProvider _mapProvider;
   private DataReader _dataReader;
+  private Logger _logger;
+  private FileWriter _fileWriter;
 
-  private static final Logger logger = LoggerFactory.getLogger(QueryExecutor.class);
-
-  public QueryExecutor(JobProvider jobProvider, DistributedMapProvider mapProvider, DataReader dataReader) {
+  public QueryExecutor(JobProvider jobProvider, DistributedMapProvider mapProvider, DataReader dataReader, Logger logger, FileWriter fileWriter) {
     _jobProvider = jobProvider;
     _mapProvider = mapProvider;
     _dataReader = dataReader;
-
+    _logger = logger;
+    _fileWriter = fileWriter;
   }
 
   public void execute(int queryID) throws ExecutionException, InterruptedException {
-    logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
+    _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
     IMap<String, Citizen> map = readInputFile();
-    logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
+    _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
 
-    logger.info("Inicio del trabajo map/reduce");
-    executeQuery(queryID, map);
-    logger.info("Fin del trabajo map/reduce");
+    _logger.info("Inicio del trabajo map/reduce");
+    List<String> answer = executeQuery(queryID, map);
+    _fileWriter.write(answer);
+    _logger.info("Fin del trabajo map/reduce");
   }
 
-  private void executeQuery(int queryID, IMap<String, Citizen> map) throws ExecutionException, InterruptedException  {
+  private List<String> executeQuery(int queryID, IMap<String, Citizen> map) throws ExecutionException, InterruptedException {
     Job<String, Citizen> job = _jobProvider.newJob(map);
+
     switch (queryID) {
       case 1:
-        executeQuery1(job);
-        break;
+        return executeQuery1(job);
       case 2:
-        executeQuery2(job);
-        break;
+        return executeQuery2(job);
       case 3:
-        executeQuery3(job);
-        break;
+        return executeQuery3(job);
       case 4:
-        executeQuery4(job);
-        break;
+        return executeQuery4(job);
       case 5:
-        executeQuery5(job);
-        break;
+        return executeQuery5(job);
       default:
         // Should not reach here, as it is already validated in configuration
         System.out.println("Incorrect query selected");
         exit(1);
+        return null;
     }
   }
 
@@ -72,57 +73,62 @@ public class QueryExecutor {
     return map;
   }
 
-  private void executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     Map<String, Integer> answer = new Query1().execute(job);
 
-    System.out.println(String.format("%s = %d", "0-14", answer.get("0-14")));
-    System.out.println(String.format("%s = %d", "15-64", answer.get("15-64")));
-    System.out.println(String.format("%s = %d", "65-?", answer.get("65-?")));
+    List<String> lines = new ArrayList();
+    lines.add(String.format("%s = %d", "0-14", answer.get("0-14")));
+    lines.add(String.format("%s = %d", "15-64", answer.get("15-64")));
+    lines.add(String.format("%s = %d", "65-?", answer.get("65-?")));
+
+    return lines;
   }
 
-  private void executeQuery2(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery2(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     Map<TipoVivienda, Double> answer = new Query2().execute(job, _jobProvider, _mapProvider);
 
     List<Map.Entry<TipoVivienda, Double>> list = new LinkedList(answer.entrySet());
 
-    list
-        .stream()
-        .sorted((e1, e2) -> Integer.compare(e1.getKey().getCode(), e2.getKey().getCode()))
-        .forEach (e -> {
-          System.out.println(String.format("%s = %.2f", e.getKey().getCode(), e.getValue()));
-        });
+    return answer
+            .entrySet()
+            .stream()
+            .sorted((e1, e2) -> Integer.compare(e1.getKey().getCode(), e2.getKey().getCode()))
+            .map(e -> String.format("%s = %.2f", e.getKey().getCode(), e.getValue()))
+            .collect(Collectors.toList());
   }
 
-  private void executeQuery3(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery3(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     List<DepartmentWithIndex> answer = new Query3().execute(job);
 
-    for (DepartmentWithIndex departmentWithIndex : answer) {
-      System.out.println(String.format("%s = %.2f", departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
-    }
+    return answer
+            .stream()
+            .map(departmentWithIndex -> String.format("%s = %.2f", departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()))
+            .collect(Collectors.toList());
   }
 
-  private void executeQuery4(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery4(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     List<DepartmentWithPopulation> answer = new Query4().execute(job);
 
-    answer
-      .stream()
-      .sorted((e1, e2) -> -e1.compareTo(e2))
-      .forEach (e -> {
-          System.out.println(String.format("%s = %d", e.getDepartment(), e.getPopulation()));
-      });
+    return answer
+            .stream()
+            .sorted((e1, e2) -> -e1.compareTo(e2))
+            .map(e -> String.format("%s = %d", e.getDepartment(), e.getPopulation()))
+            .collect(Collectors.toList());
   }
 
-  private void executeQuery5(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
-      List<Pair<Long, List<String>>> answer = new Query5().execute(job, _jobProvider, _mapProvider);
+  private List<String> executeQuery5(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
+    List<Pair<Long, List<String>>> answer = new Query5().execute(job, _jobProvider, _mapProvider);
 
-      answer
-          .stream()
-          .sorted((e1, e2) -> Long.compare(e1.fst, e2.fst))
-          .forEach (e -> {
-            System.out.println(e.fst);
-              e.snd.stream().forEach(s -> {
-                System.out.println(s);
-              });
-          });
+    List<String> lines = new ArrayList<>();
+
+    answer
+            .stream()
+            .sorted((e1, e2) -> Long.compare(e1.fst, e2.fst))
+            .forEach(e -> {
+              lines.add(String.valueOf(e.fst));
+              e.snd.stream().forEach(s -> lines.add(String.valueOf(s)));
+            });
+
+    return lines;
   }
 }
