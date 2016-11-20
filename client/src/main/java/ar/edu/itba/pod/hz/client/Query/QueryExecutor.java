@@ -59,7 +59,6 @@ public class QueryExecutor {
         System.out.println("Incorrect query selected");
         exit(1);
     }
-
   }
 
   private void executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
@@ -87,16 +86,19 @@ public class QueryExecutor {
     List<DepartmentWithIndex> answer = new Query3().execute(job);
 
     for (DepartmentWithIndex departmentWithIndex : answer) {
-      System.out.println("Department: " + departmentWithIndex.getIndex() + " index: " + departmentWithIndex.getIndex());
+      System.out.println(String.format("%s = %.2f", departmentWithIndex.getDepartment(), departmentWithIndex.getIndex()));
     }
   }
 
   private void executeQuery4(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     List<DepartmentWithPopulation> answer = new Query4().execute(job);
 
-    for (DepartmentWithPopulation departmentWithPopulation : answer) {
-      System.out.println(String.format("%s = %d", departmentWithPopulation.getDepartment(), departmentWithPopulation.getPopulation()));
-    }
+    answer
+      .stream()
+      .sorted((e1, e2) -> -e1.compareTo(e2))
+      .forEach (e -> {
+          System.out.println(String.format("%s = %d", e.getDepartment(), e.getPopulation()));
+      });
   }
 
   private void executeQuery5(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
