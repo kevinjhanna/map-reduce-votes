@@ -6,7 +6,7 @@ import com.hazelcast.nio.serialization.DataSerializable;
 
 import java.io.IOException;
 
-public class DepartmentWithPopulation implements DataSerializable {
+public class DepartmentWithPopulation implements DataSerializable, Comparable<DepartmentWithPopulation> {
     String department;
     Long population;
 
@@ -27,10 +27,9 @@ public class DepartmentWithPopulation implements DataSerializable {
         this.population = in.readLong();
     }
 
-//    @Override
-//    public int compareTo(DepartmentWithPopulation o) {
-//        return this.index.compareTo(o.index);
-//    }
+    public int compareTo(DepartmentWithPopulation o) {
+        return this.population.compareTo(o.population);
+    }
 
     public String getDepartment() {
         return department;
