@@ -17,7 +17,7 @@ public class Query5MapperFactoryPart1 implements Mapper<String, Citizen, String,
     public void map(final String keyinput, final Citizen valueinput,
             final Context<String, Integer> context) {
 
-        String key = valueinput.getNombredepto();
+        String key = String.format("%s (%s)", valueinput.getNombredepto(), valueinput.getNombreprov());
         context.emit(key, 1);
     }
 }

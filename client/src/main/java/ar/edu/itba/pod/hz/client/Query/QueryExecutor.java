@@ -3,10 +3,7 @@ package ar.edu.itba.pod.hz.client.Query;
 import ar.edu.itba.pod.hz.client.IO.reader.DataReader;
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
 import ar.edu.itba.pod.hz.client.Provider.JobProvider;
-import ar.edu.itba.pod.hz.model.Citizen;
-import ar.edu.itba.pod.hz.model.DepartmentWithIndex;
-import ar.edu.itba.pod.hz.model.DepartmentWithPopulation;
-import ar.edu.itba.pod.hz.model.TipoVivienda;
+import ar.edu.itba.pod.hz.model.*;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 
@@ -17,9 +14,6 @@ import java.util.concurrent.ExecutionException;
 
 import static java.lang.System.exit;
 
-/**
- * Created by FranDepascuali on 11/17/16.
- */
 public class QueryExecutor {
 
   private JobProvider _jobProvider;
@@ -102,10 +96,16 @@ public class QueryExecutor {
   }
 
   private void executeQuery5(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
-    Map<Long, List<String>> answer = new Query5().execute(job, _jobProvider, _mapProvider);
+      List<Pair<Long, List<String>>> answer = new Query5().execute(job, _jobProvider, _mapProvider);
 
-    for (Map.Entry<Long, List<String>> e : answer.entrySet()) {
-      System.out.println(String.format("%s => %s", e.getKey(), e.getValue()));
-    }
+      answer
+          .stream()
+          .sorted((e1, e2) -> Long.compare(e1.fst, e2.fst))
+          .forEach (e -> {
+            System.out.println(e.fst);
+              e.snd.stream().forEach(s -> {
+                System.out.println(s);
+              });
+          });
   }
 }
