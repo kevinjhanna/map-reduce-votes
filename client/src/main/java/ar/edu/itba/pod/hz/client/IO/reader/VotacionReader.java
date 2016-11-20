@@ -64,8 +64,8 @@ public class VotacionReader {
 
             Citizen aV;
             while ((aV = beanReader.read(Citizen.class, header, processors)) != null) {
-                System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s",
-                        beanReader.getLineNumber(), beanReader.getRowNumber(), aV));
+//                System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s",
+//                        beanReader.getLineNumber(), beanReader.getRowNumber(), aV));
                 theIMap.set(String.valueOf(beanReader.getLineNumber()), aV);
             }
         } finally {
