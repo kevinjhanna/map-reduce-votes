@@ -20,9 +20,9 @@ public class Query3ReducerFactory implements ReducerFactory<String, Boolean, Dou
             }
 
             @Override
-            public void reduce(final Boolean literacy) {
+            public void reduce(final Boolean illiteracy) {
                 population++;
-                illiteracy += literacy ? 0 : 1;
+                this.illiteracy += illiteracy ? 1 : 0;
             }
 
             @Override

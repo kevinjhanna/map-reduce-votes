@@ -3,36 +3,31 @@ package ar.edu.itba.pod.hz.mr;
 import ar.edu.itba.pod.hz.model.DepartmentWithIndex;
 import com.hazelcast.mapreduce.Collator;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TopCollator implements Collator<Map.Entry<String, Double>, List<DepartmentWithIndex> > {
-    private long n;
+    private int n;
 
-    public TopCollator(long n) {
+    public TopCollator(int n) {
         this.n = n;
     }
 
     @Override
-    public List<DepartmentWithIndex> collate(Iterable <Map.Entry<String, Double>> iterator) {
-        Set set = new HashSet();
-        DepartmentWithIndex min = null;
+    public List<DepartmentWithIndex> collate(Iterable <Map.Entry<String, Double>> iterable) {
+        List<DepartmentWithIndex> list = new LinkedList<>();
 
-        for (Map.Entry<String, Double> entry : iterator) {
-            DepartmentWithIndex department = new DepartmentWithIndex(entry.getKey(), entry.getValue());
-
-            if (set.size() < n) {
-                set.add(department);
-                if (min == null || department.compareTo(min) == -1) {
-                    min = department;
-                }
-            } else if (department.compareTo(min) == - 1) {
-                set.remove(min);
-                set.add(department);
-            }
+        for (Map.Entry<String, Double> entry : iterable) {
+            list.add(new DepartmentWithIndex(entry.getKey().split(":")[0], entry.getValue()));
         }
 
-        List<DepartmentWithIndex> list = new LinkedList(set);
-        Collections.sort(list, Collections.reverseOrder());
-        return list;
+        return list
+            .stream()
+            .sorted(Collections.reverseOrder())
+            .limit(n)
+            .collect(Collectors.toList());
     }
 }

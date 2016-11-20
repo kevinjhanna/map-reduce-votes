@@ -13,10 +13,10 @@ public class Query3MapperFactory implements Mapper<String, Citizen, String, Bool
             final Context<String, Boolean> context) {
         System.out.println(String.format("Llega KeyInput: %s con ValueInput: %s", keyinput, valueinput));
 
-        String key = valueinput.getNombredepto();
+        String key = String.format("%s:%s", valueinput.getNombredepto(), valueinput.getNombreprov());
 
-        context.emit(key, valueinput.isAlfabetismo());
+        context.emit(key, valueinput.getAlfabetismo() == 2);
 
-        System.out.println(String.format("Se emite (%s, %s)", key, valueinput.isAlfabetismo()));
+        System.out.println(String.format("Se emite (%s, %s)", key, valueinput.getAlfabetismo() == 2));
     }
 }

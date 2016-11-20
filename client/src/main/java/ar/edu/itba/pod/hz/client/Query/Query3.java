@@ -11,9 +11,6 @@ import com.hazelcast.mapreduce.Job;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by FranDepascuali on 11/17/16.
- */
 public class Query3 implements SimpleQueryType<String, Citizen, List<DepartmentWithIndex>> {
 
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Citizen implements DataSerializable {
     private int edad;
-    private boolean alfabetismo;
+    private int alfabetismo;
     private int tipoVivienda;
     private String nombreDepto;
     private String nombreProv;
@@ -18,7 +18,7 @@ public class Citizen implements DataSerializable {
     @Override
     public void readData(final ObjectDataInput in) throws IOException {
         edad = in.readInt();
-        alfabetismo = in.readBoolean();
+        alfabetismo = in.readInt();
         tipoVivienda = in.readInt();
         nombreDepto = in.readUTF();
         nombreProv = in.readUTF();
@@ -29,7 +29,7 @@ public class Citizen implements DataSerializable {
     @Override
     public void writeData(final ObjectDataOutput out) throws IOException {
         out.writeInt(edad);
-        out.writeBoolean(alfabetismo);
+        out.writeInt(alfabetismo);
         out.writeInt(tipoVivienda);
         out.writeUTF(nombreDepto);
         out.writeUTF(nombreProv);
@@ -38,7 +38,7 @@ public class Citizen implements DataSerializable {
 
     @Override
     public String toString() {
-        return String.format("edad %d, alfabetismo %b, tipoVivienda %s, nombreDepto %s, nombreProv %s, hogarId %s",
+        return String.format("edad %d, alfabetismo %d, tipoVivienda %s, nombreDepto %s, nombreProv %s, hogarId %s",
                 edad, alfabetismo, tipoVivienda, nombreDepto, nombreProv, hogarId);
     }
 
@@ -47,7 +47,7 @@ public class Citizen implements DataSerializable {
     }
 
     public void setAlfabetismo(int alfabetismo) {
-        this.alfabetismo = alfabetismo == 1;
+        this.alfabetismo = alfabetismo;
     }
 
     public void setTipovivienda(int tipoVivienda) {
@@ -70,7 +70,7 @@ public class Citizen implements DataSerializable {
         return edad;
     }
 
-    public boolean isAlfabetismo() {
+    public int getAlfabetismo() {
         return alfabetismo;
     }
 
