@@ -24,4 +24,8 @@ public class DataReader {
       exit(1);
     }
   }
+
+  public String getInputFile() {
+    return _inputFile;
+  }
 }

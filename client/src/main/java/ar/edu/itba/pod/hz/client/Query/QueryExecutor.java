@@ -6,6 +6,8 @@ import ar.edu.itba.pod.hz.client.Provider.JobProvider;
 import ar.edu.itba.pod.hz.model.*;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,18 +22,27 @@ public class QueryExecutor {
   private DistributedMapProvider _mapProvider;
   private DataReader _dataReader;
 
+  private static final Logger logger = LoggerFactory.getLogger(QueryExecutor.class);
+
   public QueryExecutor(JobProvider jobProvider, DistributedMapProvider mapProvider, DataReader dataReader) {
     _jobProvider = jobProvider;
     _mapProvider = mapProvider;
     _dataReader = dataReader;
+
   }
 
   public void execute(int queryID) throws ExecutionException, InterruptedException {
-    IMap<String, Citizen> myMap = _mapProvider.getMap();
-    _dataReader.loadData(myMap);
-    Job<String, Citizen> job = _jobProvider.newJob(myMap);
+    logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
+    IMap<String, Citizen> map = readInputFile();
+    logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
 
-    System.out.println("Executing Query " + queryID);
+    logger.info("Inicio del trabajo map/reduce");
+    executeQuery(queryID, map);
+    logger.info("Fin del trabajo map/reduce");
+  }
+
+  private void executeQuery(int queryID, IMap<String, Citizen> map) throws ExecutionException, InterruptedException  {
+    Job<String, Citizen> job = _jobProvider.newJob(map);
     switch (queryID) {
       case 1:
         executeQuery1(job);
@@ -53,6 +64,12 @@ public class QueryExecutor {
         System.out.println("Incorrect query selected");
         exit(1);
     }
+  }
+
+  private IMap<String, Citizen> readInputFile() {
+    IMap<String, Citizen> map = _mapProvider.getMap();
+    _dataReader.loadData(map);
+    return map;
   }
 
   private void executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
