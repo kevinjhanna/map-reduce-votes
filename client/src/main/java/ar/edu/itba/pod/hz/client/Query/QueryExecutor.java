@@ -36,10 +36,12 @@ public class QueryExecutor {
   }
 
   public void execute(Configuration configuration) throws ExecutionException, InterruptedException {
-    _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
-    IMap<String, Citizen> map = readInputFile();
-    _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
-
+    IMap<String, Citizen> map = _mapProvider.getMap();
+    if (configuration.loadMap()) {
+      _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
+      _dataReader.loadData(map);
+      _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
+    }
     _logger.info("Inicio del trabajo map/reduce");
     List<String> answer = executeQuery(map, configuration);
     _fileWriter.write(answer);

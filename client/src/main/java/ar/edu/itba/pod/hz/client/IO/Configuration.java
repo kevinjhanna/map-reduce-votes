@@ -26,8 +26,10 @@ public class Configuration {
   // For query 4
   private Integer tope;
 
+  private boolean loadMap;
 
-  public Configuration(String name, String pass, String[] addresses,  Integer queryID, String inputPath, String outputPath, Integer numberOfDepartments, String province, Integer tope) {
+
+  public Configuration(String name, String pass, String[] addresses,  Integer queryID, String inputPath, String outputPath, Integer numberOfDepartments, String province, Integer tope, boolean loadMap) {
     this.name = name;
     this.pass = pass;
     this.addresses = addresses;
@@ -37,6 +39,7 @@ public class Configuration {
     this.numberOfDepartments = numberOfDepartments;
     this.province = province;
     this.tope = tope;
+    this.loadMap = loadMap;
   }
 
   public String getName() {
@@ -73,6 +76,10 @@ public class Configuration {
 
   public Integer getTope() {
     return tope;
+  }
+
+  public boolean loadMap() {
+    return loadMap;
   }
 
   @Override

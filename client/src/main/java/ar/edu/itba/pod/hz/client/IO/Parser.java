@@ -98,7 +98,11 @@ public class Parser {
       }
     }
 
-    return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath, n, prov, tope);
+    String loadMapString = System.getProperty("loadMap");
+
+    boolean loadMap = Boolean.parseBoolean(loadMapString);
+
+    return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath, n, prov, tope, loadMap);
   }
 
   private void validateNotNull(String key, String value) {
