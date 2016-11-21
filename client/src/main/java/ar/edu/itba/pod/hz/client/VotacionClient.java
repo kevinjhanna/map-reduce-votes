@@ -24,8 +24,8 @@ public class VotacionClient {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         Locale.setDefault(new Locale("es", "es-AR"));
 
-        Configuration configuration = new Parser().getConfiguration();
         Logger logger = LoggerFactory.getLogger(VotacionClient.class);
+        Configuration configuration = new Parser().getConfiguration(logger);
 
         logger.info(String.format("Connecting with cluster dev-name [%s]", configuration.getName()));
         HazelcastInstance client = loadConfiguration(configuration);

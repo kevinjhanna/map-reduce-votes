@@ -26,6 +26,7 @@ public class FileWriter {
     Path path = Paths.get(_fileName);
     try {
       Files.write(path, lines, Charset.forName("UTF-8"));
+      _logger.info("Respuesta guardada correctamente en client/target/" + _fileName);
     } catch (IOException e) {
       _logger.error("couldn't create output file " + _fileName);
     }
