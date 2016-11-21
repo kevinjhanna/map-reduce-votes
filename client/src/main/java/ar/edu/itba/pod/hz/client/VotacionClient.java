@@ -16,11 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 public class VotacionClient {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+        Locale.setDefault(new Locale("es", "es-AR"));
+
         Configuration configuration = new Parser().getConfiguration();
         Logger logger = LoggerFactory.getLogger(VotacionClient.class);
 
