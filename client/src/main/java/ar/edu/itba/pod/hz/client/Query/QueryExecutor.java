@@ -64,7 +64,7 @@ public class QueryExecutor {
       case 3:
         return executeQuery3(job, configuration.getNumberOfDepartments());
       case 4:
-        return executeQuery4(job, configuration.getProvince());
+        return executeQuery4(job, configuration.getProvince(), configuration.getTope());
       case 5:
         return executeQuery5(job);
       default:
@@ -73,12 +73,6 @@ public class QueryExecutor {
         exit(1);
         return null;
     }
-  }
-
-  private IMap<String, Citizen> readInputFile() {
-    IMap<String, Citizen> map = _mapProvider.getMap();
-    _dataReader.loadData(map);
-    return map;
   }
 
   private List<String> executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
@@ -114,8 +108,8 @@ public class QueryExecutor {
             .collect(Collectors.toList());
   }
 
-  private List<String> executeQuery4(Job<String, Citizen> job, String province) throws ExecutionException, InterruptedException {
-    List<DepartmentWithPopulation> answer = new Query4(province).execute(job);
+  private List<String> executeQuery4(Job<String, Citizen> job, String province, int tope) throws ExecutionException, InterruptedException {
+    List<DepartmentWithPopulation> answer = new Query4(province,tope).execute(job);
 
     return answer
             .stream()

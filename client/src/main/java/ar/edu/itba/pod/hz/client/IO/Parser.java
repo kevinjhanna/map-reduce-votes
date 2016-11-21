@@ -93,7 +93,7 @@ public class Parser {
       }
 
       if (tope < 0) {
-        logger.error("n must be positive!");
+        logger.error("tope must be positive!");
         exit(1);
       }
     }
