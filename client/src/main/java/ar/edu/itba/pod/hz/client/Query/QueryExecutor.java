@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.hz.client.Query;
 
+import ar.edu.itba.pod.hz.client.Chronometer;
 import ar.edu.itba.pod.hz.client.IO.Configuration;
 import ar.edu.itba.pod.hz.client.IO.FileWriter;
 import ar.edu.itba.pod.hz.client.IO.reader.DataReader;
@@ -42,10 +43,14 @@ public class QueryExecutor {
       _dataReader.loadData(map);
       _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
     }
+    Chronometer chronometer = new Chronometer();
     _logger.info("Inicio del trabajo map/reduce");
+    chronometer.start();
     List<String> answer = executeQuery(map, configuration);
     _fileWriter.write(answer);
+    chronometer.stop();
     _logger.info("Fin del trabajo map/reduce");
+    _logger.info("Duracion: " + chronometer.getTime());
   }
 
   private List<String> executeQuery(IMap<String, Citizen> map, Configuration configuration) throws ExecutionException, InterruptedException {
