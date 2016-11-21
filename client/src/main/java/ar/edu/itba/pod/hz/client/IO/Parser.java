@@ -57,11 +57,11 @@ public class Parser {
     validateNotNull("inPath", inputPath);
     validateNotNull("outPath", outputPath);
 
+    Integer n = null;
+
     if (queryID == 3) {
       String nString = System.getProperty("n");
       validateNotNull("n", nString);
-
-      Integer n = null;
 
       try {
         n = Integer.valueOf(nString);
@@ -76,14 +76,14 @@ public class Parser {
       }
     }
 
+    Integer tope = null;
+    String prov = null;
     if (queryID == 4) {
-      String prov = System.getProperty("prov");
+      prov = System.getProperty("prov");
       String topeString = System.getProperty("tope");
 
       validateNotNull("prov", prov);
       validateNotNull("tope", topeString);
-
-      Integer tope = null;
 
       try {
         tope = Integer.valueOf(topeString);
@@ -98,7 +98,7 @@ public class Parser {
       }
     }
 
-    return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath);
+    return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath, n, prov, tope);
   }
 
   private void validateNotNull(String key, String value) {

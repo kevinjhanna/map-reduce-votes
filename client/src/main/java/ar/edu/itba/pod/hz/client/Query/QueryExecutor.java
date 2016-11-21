@@ -35,21 +35,21 @@ public class QueryExecutor {
     _fileWriter = fileWriter;
   }
 
-  public void execute(int queryID, Configuration configuration) throws ExecutionException, InterruptedException {
+  public void execute(Configuration configuration) throws ExecutionException, InterruptedException {
     _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
     IMap<String, Citizen> map = readInputFile();
     _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
 
     _logger.info("Inicio del trabajo map/reduce");
-    List<String> answer = executeQuery(queryID, map, configuration);
+    List<String> answer = executeQuery(map, configuration);
     _fileWriter.write(answer);
     _logger.info("Fin del trabajo map/reduce");
   }
 
-  private List<String> executeQuery(int queryID, IMap<String, Citizen> map, Configuration configuration) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery(IMap<String, Citizen> map, Configuration configuration) throws ExecutionException, InterruptedException {
     Job<String, Citizen> job = _jobProvider.newJob(map);
 
-    switch (queryID) {
+    switch (configuration.getQueryID()) {
       case 1:
         return executeQuery1(job);
       case 2:

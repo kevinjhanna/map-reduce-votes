@@ -39,7 +39,7 @@ public class VotacionClient {
         FileWriter fileWriter = new FileWriter(configuration.getOutputPath(), logger);
         QueryExecutor queryExecutor = new QueryExecutor(jobProvider, mapProvider, dataReader, logger, fileWriter);
 
-        queryExecutor.execute(configuration.getQueryID());
+        queryExecutor.execute(configuration);
 
     }
 
