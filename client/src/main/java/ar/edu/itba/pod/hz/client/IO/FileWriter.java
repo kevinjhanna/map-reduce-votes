@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class FileWriter {
   public void write(List<String> lines) {
     Path path = Paths.get(_fileName);
     try {
-      Files.write(path, lines, Charset.forName("UTF-8"));
+      Files.write(path, lines, Charset.forName("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
       _logger.info("Respuesta guardada correctamente en client/target/" + _fileName);
     } catch (IOException e) {
       _logger.error("couldn't create output file " + _fileName);

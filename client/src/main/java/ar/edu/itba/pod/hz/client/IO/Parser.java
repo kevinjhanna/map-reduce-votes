@@ -57,6 +57,19 @@ public class Parser {
     validateNotNull("inPath", inputPath);
     validateNotNull("outPath", outputPath);
 
+    if (queryID == 3) {
+      String n = System.getProperty("n");
+      validateNotNull("n", n);
+    }
+
+    if (queryID == 4) {
+      String prov = System.getProperty("prov");
+      String tope = System.getProperty("tope");
+
+      validateNotNull("prov", prov);
+      validateNotNull("tope", tope);
+    }
+
     return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath);
   }
 

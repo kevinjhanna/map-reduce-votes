@@ -46,7 +46,7 @@ EOF
                  query=$2
                  shift
              else
-                 printf 'ERROR: "-Dname" requires a non-empty name.\n' >&2
+                 printf 'ERROR: "-Dquery" requires a non-empty query.\n' >&2
                  exit 1
              fi
              ;;
@@ -55,7 +55,7 @@ EOF
                  inPath=$2
                  shift
              else
-                 printf 'ERROR: "-Dname" requires a non-empty name.\n' >&2
+                 printf 'ERROR: "-DinPath" requires a non-empty inPath.\n' >&2
                  exit 1
              fi
              ;;
@@ -64,11 +64,11 @@ EOF
                  outPath=$2
                  shift
              else
-                 printf 'ERROR: "-Dname" requires a non-empty name.\n' >&2
+                 printf 'ERROR: "-DoutPath" requires a non-empty outPath.\n' >&2
                  exit 1
              fi
              ;;
-         -Dname)       # Takes an option argument, ensuring it has been specified.
+        -Dname)       # Takes an option argument, ensuring it has been specified.
              if [ -n "$2" ]; then
                  name=$2
                  shift
@@ -82,7 +82,7 @@ EOF
                  pass=$2
                  shift
              else
-                 printf 'ERROR: "-Dname" requires a non-empty name.\n' >&2
+                 printf 'ERROR: "-Dpass" requires a non-empty pass.\n' >&2
                  exit 1
              fi
              ;;
@@ -112,8 +112,3 @@ gunzip -c clase09-ejer01-client-1.0-SNAPSHOT-bin.tar.gz | tar xopf -
 chmod +x clase09-ejer01-client-1.0-SNAPSHOT/run-client.sh
 
 java -cp 'clase09-ejer01-client-1.0-SNAPSHOT/lib/jars/*' -Daddresses=''${addresses}'' -Dquery=''${query}'' -DinPath=''${inPath}'' -DoutPath=''${outPath}'' -Dname=''${name}'' -Dpass=''${pass}'' "ar.edu.itba.pod.hz.client.VotacionClient" $*
-
-# java -Daddresses=10.6.0.1;10.6.0.2 -Dquery=3 -DinPath=censo.csv -DoutPath=output.txt -Dn=100 client.MyClient
-
-#java -cp 'clase09-ejer01-client-1.0-SNAPSHOT/lib/jars/*' -Daddresses '127.0.0.1:127.0.0.1' -Dquery 2 -DinPath 'files/dataset-1000.csv' -DoutPath 'out.txt' -Dname '52034-53080' -Dpass dev-pass "ar.edu.itba.pod.hz.client.VotacionClient" $*
-
