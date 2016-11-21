@@ -58,16 +58,44 @@ public class Parser {
     validateNotNull("outPath", outputPath);
 
     if (queryID == 3) {
-      String n = System.getProperty("n");
-      validateNotNull("n", n);
+      String nString = System.getProperty("n");
+      validateNotNull("n", nString);
+
+      Integer n = null;
+
+      try {
+        n = Integer.valueOf(nString);
+      } catch (NumberFormatException e) {
+        logger.error("n must be an integer!");
+        exit(1);
+      }
+
+      if (n < 0) {
+        logger.error("n must be positive!");
+        exit(1);
+      }
     }
 
     if (queryID == 4) {
       String prov = System.getProperty("prov");
-      String tope = System.getProperty("tope");
+      String topeString = System.getProperty("tope");
 
       validateNotNull("prov", prov);
-      validateNotNull("tope", tope);
+      validateNotNull("tope", topeString);
+
+      Integer tope = null;
+
+      try {
+        tope = Integer.valueOf(topeString);
+      } catch (NumberFormatException e) {
+        logger.error("tope must be an integer!");
+        exit(1);
+      }
+
+      if (tope < 0) {
+        logger.error("n must be positive!");
+        exit(1);
+      }
     }
 
     return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath);
