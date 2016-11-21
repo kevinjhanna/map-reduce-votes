@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import static java.lang.System.exit;
+
 public class VotacionClient {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -40,6 +42,7 @@ public class VotacionClient {
         QueryExecutor queryExecutor = new QueryExecutor(jobProvider, mapProvider, dataReader, logger, fileWriter);
 
         queryExecutor.execute(configuration);
+        exit(0);
 
     }
 

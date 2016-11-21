@@ -99,8 +99,13 @@ public class Parser {
     }
 
     String loadMapString = System.getProperty("loadMap");
+    boolean loadMap = false;
 
-    boolean loadMap = Boolean.parseBoolean(loadMapString);
+    if (loadMapString != null) {
+      if (Boolean.parseBoolean(loadMapString)) {
+        loadMap = true;
+      }
+    }
 
     return new Configuration(name, pass, arrayAddresses, queryID, inputPath, outputPath, n, prov, tope, loadMap);
   }
