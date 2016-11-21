@@ -26,7 +26,7 @@ public class Query5 implements ComplexQueryType<String, Citizen, List<Pair<Long,
 
     Map<String, Long> rta = future.get();
 
-    IMap<String, Long> otherMap = mapProvider.getMap();
+    IMap<String, Long> otherMap = mapProvider.getMap("5:2");
     otherMap.putAll(rta);
     Job<String, Long> job2 = jobProvider.newJob(otherMap);
 

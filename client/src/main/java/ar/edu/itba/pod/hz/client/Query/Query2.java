@@ -22,7 +22,7 @@ public class Query2 implements ComplexQueryType<String, Citizen, Map<TipoViviend
   public Map<TipoVivienda, Double> execute(Job<String, Citizen> job, JobProvider jobProvider, DistributedMapProvider mapProvider) throws ExecutionException, InterruptedException {
     Map<Integer, NumberOfCitizensPerHomeType> map = new CitizensPerHomeQuery().execute(job);
 
-    IMap<Integer, NumberOfCitizensPerHomeType> other = mapProvider.getMap();
+    IMap<Integer, NumberOfCitizensPerHomeType> other = mapProvider.getMap("2:2");
     other.putAll(map);
     Job<Integer, NumberOfCitizensPerHomeType> newJob = jobProvider.newJob(other);
     Map<TipoVivienda, Double> answer = new AveragePerHomeTypeQuery().execute(newJob);

@@ -5,9 +5,6 @@ import com.hazelcast.core.IMap;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by FranDepascuali on 11/17/16.
- */
 public class DistributedMapProvider {
 
   private static String AVAILABLE_MAP = "paso2015";
@@ -18,13 +15,10 @@ public class DistributedMapProvider {
 
   public DistributedMapProvider(HazelcastInstance client) {
     _client = client;
-    currentMapIndex = new AtomicInteger(0);
   }
 
-  public synchronized <KeyType, ValueType> IMap<KeyType, ValueType> getMap() {
-    int current = currentMapIndex.get();
-    IMap<KeyType, ValueType> map = _client.getMap(AVAILABLE_MAP + "_" + current);
-    currentMapIndex.set(current + 1);
+  public <KeyType, ValueType> IMap<KeyType, ValueType> getMap(String namespace) {
+    IMap<KeyType, ValueType> map = _client.getMap(AVAILABLE_MAP + "_" + namespace);
 
     return map;
   }
