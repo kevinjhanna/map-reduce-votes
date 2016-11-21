@@ -126,7 +126,10 @@ public class QueryExecutor {
             .sorted((e1, e2) -> Long.compare(e1.fst, e2.fst))
             .forEach(e -> {
               lines.add(String.valueOf(e.fst));
-              e.snd.stream().forEach(s -> lines.add(String.valueOf(s)));
+              e.snd.stream().forEach(s ->  {
+                lines.add(String.valueOf(s));
+              });
+              lines.add("");
             });
 
     return lines;
