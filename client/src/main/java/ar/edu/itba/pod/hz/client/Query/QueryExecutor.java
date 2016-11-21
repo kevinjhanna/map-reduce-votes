@@ -50,7 +50,7 @@ public class QueryExecutor {
     _fileWriter.write(answer);
     chronometer.stop();
     _logger.info("Fin del trabajo map/reduce");
-    _logger.info("Duracion: " + chronometer.getTime());
+    _logger.info("Duracion: " + chronometer.getTime() + " ms");
   }
 
   private List<String> executeQuery(IMap<String, Citizen> map, Configuration configuration) throws ExecutionException, InterruptedException {
