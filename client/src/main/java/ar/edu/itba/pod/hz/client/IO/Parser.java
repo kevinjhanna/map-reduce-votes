@@ -101,7 +101,7 @@ public class Parser {
     String loadMapString = System.getProperty("loadMap");
     boolean loadMap = true;
 
-    if (loadMapString == "false") {
+    if (loadMapString.equals("false")) {
       loadMap = false;
     }
 
