@@ -5,9 +5,6 @@ import ar.edu.itba.pod.hz.model.TipoVivienda;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-/**
- * Created by FranDepascuali on 11/13/16.
- */
 public class Query2HomesPerHomeTypeReducerFactory implements ReducerFactory<Integer, NumberOfCitizensPerHomeType, NumberOfCitizensPerHomeType> {
   private static final long serialVersionUID = 7760070699178320490L;
 
@@ -32,7 +29,6 @@ public class Query2HomesPerHomeTypeReducerFactory implements ReducerFactory<Inte
 
       @Override
       public NumberOfCitizensPerHomeType finalizeReduce() {
-//        System.out.println(String.format("FinalReduce for %s = %s", houseType, numberOfPeoplePerHouseType));
         return new NumberOfCitizensPerHomeType(numberOfPeoplePerHouseType, houseType);
       }
     };

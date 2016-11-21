@@ -24,7 +24,6 @@ public class Query4ReducerFactory implements ReducerFactory<String, Integer, Lon
 
             @Override
             public Long finalizeReduce() {
-                System.out.println(String.format("FinalReduce for %s = %d", department, population));
                 return population;
             }
         };

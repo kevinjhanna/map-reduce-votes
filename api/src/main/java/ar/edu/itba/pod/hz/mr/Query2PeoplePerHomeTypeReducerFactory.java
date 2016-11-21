@@ -4,9 +4,6 @@ import ar.edu.itba.pod.hz.model.TipoVivienda;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-/**
- * Created by FranDepascuali on 11/16/16.
- */
 public class Query2PeoplePerHomeTypeReducerFactory implements ReducerFactory<TipoVivienda, Integer, Double> {
   private static final long serialVersionUID = 7760070699178320492L;
 

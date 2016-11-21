@@ -28,7 +28,6 @@ public class Query3ReducerFactory implements ReducerFactory<String, Boolean, Dou
             @Override
             public Double finalizeReduce() {
                 double index = Double.valueOf(illiteracy) / population;
-                System.out.println(String.format("FinalReduce for %s = %s", department, index));
                 return index;
             }
         };

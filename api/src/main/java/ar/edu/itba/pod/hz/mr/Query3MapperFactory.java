@@ -11,12 +11,8 @@ public class Query3MapperFactory implements Mapper<String, Citizen, String, Bool
     @Override
     public void map(final String keyinput, final Citizen valueinput,
             final Context<String, Boolean> context) {
-        System.out.println(String.format("Llega KeyInput: %s con ValueInput: %s", keyinput, valueinput));
-
         String key = String.format("%s:%s", valueinput.getNombredepto(), valueinput.getNombreprov());
 
         context.emit(key, valueinput.getAlfabetismo() == 2);
-
-        System.out.println(String.format("Se emite (%s, %s)", key, valueinput.getAlfabetismo() == 2));
     }
 }

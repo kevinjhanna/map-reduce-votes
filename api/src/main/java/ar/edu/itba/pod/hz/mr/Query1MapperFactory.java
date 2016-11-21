@@ -11,7 +11,6 @@ public class Query1MapperFactory implements Mapper<String, Citizen, String, Inte
     @Override
     public void map(final String keyinput, final Citizen valueinput,
             final Context<String, Integer> context) {
-        System.out.println(String.format("Llega KeyInput: %s con ValueInput: %s", keyinput, valueinput));
 
         int age = valueinput.getEdad();
         String key = null;
@@ -26,7 +25,5 @@ public class Query1MapperFactory implements Mapper<String, Citizen, String, Inte
 
 
         context.emit(key, 1);
-
-        System.out.println(String.format("Se emite (%s, %s)", key, 1));
     }
 }
