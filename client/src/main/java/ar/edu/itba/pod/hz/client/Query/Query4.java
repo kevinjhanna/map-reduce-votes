@@ -14,9 +14,11 @@ import java.util.concurrent.ExecutionException;
 public class Query4 implements SimpleQueryType<String, Citizen, List<DepartmentWithPopulation>> {
 
   private String _province;
+  private int _tope;
 
-  public Query4(String province) {
+  public Query4(String province, int tope) {
     _province = province;
+    _tope = tope;
   }
 
   @Override
@@ -24,7 +26,7 @@ public class Query4 implements SimpleQueryType<String, Citizen, List<DepartmentW
     ICompletableFuture<List<DepartmentWithPopulation>> future = job
             .mapper(new Query4MapperFactory(_province))
             .reducer(new Query4ReducerFactory())
-            .submit(new Query4Collator(7));
+            .submit(new Query4Collator(_tope));
 
     return future.get();
   }
