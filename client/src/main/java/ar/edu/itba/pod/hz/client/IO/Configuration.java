@@ -17,13 +17,26 @@ public class Configuration {
 
   private String outputPath;
 
-  public Configuration(String name, String pass, String[] addresses,  Integer queryID, String inputPath, String outputPath) {
+  // For query 3
+  private Integer numberOfDepartments;
+
+  // For query 4
+  private String province;
+
+  // For query 4
+  private Integer tope;
+
+
+  public Configuration(String name, String pass, String[] addresses,  Integer queryID, String inputPath, String outputPath, Integer numberOfDepartments, String province, Integer tope) {
     this.name = name;
     this.pass = pass;
     this.addresses = addresses;
     this.queryID = queryID;
     this.inputPath = inputPath;
     this.outputPath = outputPath;
+    this.numberOfDepartments = numberOfDepartments;
+    this.province = province;
+    this.tope = tope;
   }
 
   public String getName() {
@@ -48,6 +61,18 @@ public class Configuration {
 
   public String getOutputPath() {
     return outputPath;
+  }
+
+  public Integer getNumberOfDepartments() {
+    return numberOfDepartments;
+  }
+
+  public String getProvince() {
+    return province;
+  }
+
+  public Integer getTope() {
+    return tope;
   }
 
   @Override

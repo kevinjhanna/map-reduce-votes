@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.hz.client.Query;
 
+import ar.edu.itba.pod.hz.client.IO.Configuration;
 import ar.edu.itba.pod.hz.client.IO.FileWriter;
 import ar.edu.itba.pod.hz.client.IO.reader.DataReader;
 import ar.edu.itba.pod.hz.client.Provider.DistributedMapProvider;
@@ -34,18 +35,18 @@ public class QueryExecutor {
     _fileWriter = fileWriter;
   }
 
-  public void execute(int queryID) throws ExecutionException, InterruptedException {
+  public void execute(int queryID, Configuration configuration) throws ExecutionException, InterruptedException {
     _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
     IMap<String, Citizen> map = readInputFile();
     _logger.info("Fin de lectura del archivo: " + _dataReader.getInputFile());
 
     _logger.info("Inicio del trabajo map/reduce");
-    List<String> answer = executeQuery(queryID, map);
+    List<String> answer = executeQuery(queryID, map, configuration);
     _fileWriter.write(answer);
     _logger.info("Fin del trabajo map/reduce");
   }
 
-  private List<String> executeQuery(int queryID, IMap<String, Citizen> map) throws ExecutionException, InterruptedException {
+  private List<String> executeQuery(int queryID, IMap<String, Citizen> map, Configuration configuration) throws ExecutionException, InterruptedException {
     Job<String, Citizen> job = _jobProvider.newJob(map);
 
     switch (queryID) {
@@ -54,9 +55,9 @@ public class QueryExecutor {
       case 2:
         return executeQuery2(job);
       case 3:
-        return executeQuery3(job);
+        return executeQuery3(job, configuration.getNumberOfDepartments());
       case 4:
-        return executeQuery4(job);
+        return executeQuery4(job, configuration.getProvince());
       case 5:
         return executeQuery5(job);
       default:
@@ -97,8 +98,8 @@ public class QueryExecutor {
             .collect(Collectors.toList());
   }
 
-  private List<String> executeQuery3(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
-    List<DepartmentWithIndex> answer = new Query3().execute(job);
+  private List<String> executeQuery3(Job<String, Citizen> job, Integer numberOfDepartments) throws ExecutionException, InterruptedException {
+    List<DepartmentWithIndex> answer = new Query3(numberOfDepartments).execute(job);
 
     return answer
             .stream()
@@ -106,8 +107,8 @@ public class QueryExecutor {
             .collect(Collectors.toList());
   }
 
-  private List<String> executeQuery4(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
-    List<DepartmentWithPopulation> answer = new Query4().execute(job);
+  private List<String> executeQuery4(Job<String, Citizen> job, String province) throws ExecutionException, InterruptedException {
+    List<DepartmentWithPopulation> answer = new Query4(province).execute(job);
 
     return answer
             .stream()

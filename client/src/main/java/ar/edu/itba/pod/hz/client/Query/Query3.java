@@ -13,13 +13,18 @@ import java.util.concurrent.ExecutionException;
 
 public class Query3 implements SimpleQueryType<String, Citizen, List<DepartmentWithIndex>> {
 
+  private int _numberOfDepartments;
+
+  public Query3(int numberOfDepartments) {
+    _numberOfDepartments = numberOfDepartments;
+  }
 
   @Override
   public List<DepartmentWithIndex> execute(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     ICompletableFuture<List<DepartmentWithIndex>> future = job
             .mapper(new Query3MapperFactory())
             .reducer(new Query3ReducerFactory())
-            .submit(new TopCollator(10));
+            .submit(new TopCollator(_numberOfDepartments));
 
     return future.get();
   }

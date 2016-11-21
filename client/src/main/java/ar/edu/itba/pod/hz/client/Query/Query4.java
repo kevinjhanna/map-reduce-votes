@@ -16,10 +16,16 @@ import java.util.concurrent.ExecutionException;
  */
 public class Query4 implements SimpleQueryType<String, Citizen, List<DepartmentWithPopulation>> {
 
+  private String _province;
+
+  public Query4(String province) {
+    _province = province;
+  }
+
   @Override
   public List<DepartmentWithPopulation> execute(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
     ICompletableFuture<List<DepartmentWithPopulation>> future = job
-            .mapper(new Query4MapperFactory("Santa Fe"))
+            .mapper(new Query4MapperFactory(_province))
             .reducer(new Query4ReducerFactory())
             .submit(new Query4Collator(7));
 
