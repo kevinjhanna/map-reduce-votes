@@ -37,7 +37,7 @@ public class QueryExecutor {
   }
 
   public void execute(Configuration configuration) throws ExecutionException, InterruptedException {
-    IMap<String, Citizen> map = _mapProvider.getMap(String.valueOf(configuration.getQueryID()));
+    IMap<String, Citizen> map = _mapProvider.getMap("0");
     if (configuration.loadMap()) {
       _logger.info("Inicio de lectura del archivo: " + _dataReader.getInputFile());
       _dataReader.loadData(map);
@@ -73,12 +73,6 @@ public class QueryExecutor {
         exit(1);
         return null;
     }
-  }
-
-  private IMap<String, Citizen> readInputFile() {
-    IMap<String, Citizen> map = _mapProvider.getMap("0");
-    _dataReader.loadData(map);
-    return map;
   }
 
   private List<String> executeQuery1(Job<String, Citizen> job) throws ExecutionException, InterruptedException {
