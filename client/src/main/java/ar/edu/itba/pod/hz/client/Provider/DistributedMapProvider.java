@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DistributedMapProvider {
 
-  private static String AVAILABLE_MAP = "paso2015";
+  private static String AVAILABLE_MAP = "52034-53080";
 
   private AtomicInteger currentMapIndex;
 
