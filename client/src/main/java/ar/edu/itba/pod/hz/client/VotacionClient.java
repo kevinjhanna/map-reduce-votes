@@ -34,7 +34,7 @@ public class VotacionClient {
         logger.info(client.getCluster().toString());
 
         JobProvider jobProvider = new JobProvider(client);
-        DistributedMapProvider mapProvider = new DistributedMapProvider(client);
+        DistributedMapProvider mapProvider = new DistributedMapProvider(client, configuration.loadMap());
 
         DataReader dataReader = new DataReader(configuration.getInputPath());
 

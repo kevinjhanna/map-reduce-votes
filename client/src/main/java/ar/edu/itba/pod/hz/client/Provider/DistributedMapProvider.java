@@ -13,12 +13,19 @@ public class DistributedMapProvider {
 
   private HazelcastInstance _client;
 
-  public DistributedMapProvider(HazelcastInstance client) {
+  private boolean loadMap;
+
+
+  public DistributedMapProvider(HazelcastInstance client, boolean loadmap) {
     _client = client;
+    this.loadMap = loadmap;
   }
 
   public <KeyType, ValueType> IMap<KeyType, ValueType> getMap(String namespace) {
     IMap<KeyType, ValueType> map = _client.getMap(AVAILABLE_MAP + "_" + namespace);
+    if (loadMap) {
+      map.clear();
+    }
 
     return map;
   }
